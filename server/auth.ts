@@ -23,7 +23,7 @@ export const auth = betterAuth({
   plugins: [expo(), bearer()],
   trustedOrigins: [
     baseURL,
-    "https://moedinha.adelweb.br",
+    "https://moedinha.adelweb.com.br",
     "financecontrol://",
     "exp://",
     "exp://**",

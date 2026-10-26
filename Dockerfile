@@ -5,7 +5,7 @@ COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 
 COPY . .
-ARG EXPO_PUBLIC_API_URL=https://moedinha.adelweb.br
+ARG EXPO_PUBLIC_API_URL=https://moedinha.adelweb.com.br
 ENV EXPO_PUBLIC_API_URL=$EXPO_PUBLIC_API_URL
 ENV CI=1
 RUN npx expo export --platform web
