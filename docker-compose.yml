@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        EXPO_PUBLIC_API_URL: https://moedinha.adelweb.br
+    container_name: moedinha
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      BETTER_AUTH_URL: https://moedinha.adelweb.br
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Defina BETTER_AUTH_SECRET no .env}
+    volumes:
+      - moedinha_data:/app/data
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-proxy}
+      - traefik.http.routers.moedinha.rule=Host(`moedinha.adelweb.br`)
+      - traefik.http.routers.moedinha.entrypoints=websecure
+      - traefik.http.routers.moedinha.tls=true
+      - traefik.http.routers.moedinha.tls.certresolver=letsencrypt
+      - traefik.http.routers.moedinha.service=moedinha
+      - traefik.http.services.moedinha.loadbalancer.server.port=3333
+      - traefik.http.routers.moedinha-http.rule=Host(`moedinha.adelweb.br`)
+      - traefik.http.routers.moedinha-http.entrypoints=web
+      - traefik.http.routers.moedinha-http.middlewares=moedinha-https
+      - traefik.http.middlewares.moedinha-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.moedinha-https.redirectscheme.permanent=true
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-proxy}
+
+volumes:
+  moedinha_data:
