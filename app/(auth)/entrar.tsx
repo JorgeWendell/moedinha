@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,16 +36,24 @@ export default function Entrar() {
           email: email.trim(),
           password,
         });
-        if (result.error) setError(friendlyAuthError(result.error.message));
+        if (result.error) {
+          setError(friendlyAuthError(result.error.message));
+          return;
+        }
+        router.replace("/(app)");
         return;
       }
       const result = await authClient.signIn.email({
         email: email.trim(),
         password,
       });
-      if (result.error) setError(friendlyAuthError(result.error.message));
+      if (result.error) {
+        setError(friendlyAuthError(result.error.message));
+        return;
+      }
+      router.replace("/(app)");
     } catch {
-      setError("Não consegui falar com a API. Rode npm run api.");
+      setError("Não consegui falar com o servidor. Tenta de novo.");
     } finally {
       setLoading(false);
     }
